@@ -1,0 +1,34 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: $font-family-montserrat;
+  scrollbar-color: #0057b8 #e9ecef;
+}
+
+body {
+  background-color: $background-gray;
+}
+
+ul {
+  list-style: none;
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #e9ecef;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #0057b8;
+  width: 100%;
+}
+
+.ant-layout {
+  @media (max-width: 1024px) {
+      margin-left: 0 !important;
+  }
+}

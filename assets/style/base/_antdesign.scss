@@ -1,0 +1,31 @@
+.ant-btn {
+  height: auto;
+  border-radius: 3px;
+  padding: 8px 12px;
+  &.ant-btn-primary {
+    background-color: $primary-color;
+    border-color: $primary-color;
+    color: #FFF;
+    font-size: 1rem;
+  }
+}
+.ant-input.primary{
+  background: #FFF;
+  border: 1px solid #ECECEC;
+  height: 56px;
+  outline: none;
+  margin-bottom: 15px;
+  margin-bottom: 0;
+  border-radius: 3px;
+}
+
+.ant-form-item-label{
+  line-height: 16px;
+}
+
+.ant-form-item-required::before{
+  display: none !important;
+}
+.ant-form-item-required::after{
+  display: none !important;
+}

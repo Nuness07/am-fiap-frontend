@@ -1,0 +1,28 @@
+@import 'base/reset';
+@import 'base/antdesign';
+
+p{
+  margin-bottom: 0 !important;
+  font-size: 16px;
+}
+
+.container {
+  max-width: calc(1242px + 32px);
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding: 0 16px;
+}
+
+@media (max-width: 1500px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    max-width: calc(1242px + 32px);
+    padding: 0 16px;
+  }
+}
