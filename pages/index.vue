@@ -51,6 +51,32 @@ export default {
         password: [{ required: true, message: 'Senha é obrigatorio' }]
       }
     }
+  },
+  methods: {
+    async check () {
+      await this.$refs.formLogin.validate((valid) => {
+        if (valid) {
+          this.login(this.formLogin)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+
+    async login (values) {
+      try {
+        await this.$auth.loginWith('localUser', {
+          data: {
+            email: values.email,
+            password: values.password
+          }
+        })
+        this.$router.push('/dashboard')
+      } catch (err) {
+        console.log(err)
+      }
+    }
   }
 }
 </script>

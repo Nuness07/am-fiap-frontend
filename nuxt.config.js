@@ -1,4 +1,9 @@
 export default {
+  target: 'static',
+  ssr: false, // Disable Server Side rendering
+  server: {
+    port: 8000 // default: 3000
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'am-frontend',
@@ -56,12 +61,40 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseURL: 'http://localhost:3000'
+  },
+
+  auth: {
+    strategies: {
+      localUser: {
+        scheme: 'local',
+        token: {
+          property: 'token',
+          global: true,
+          type: ''
+        },
+        user: {
+          property: ''
+        },
+        endpoints: {
+          login: { url: '/login', method: 'post', propertyName: 'token' },
+          logout: { url: '/logout', method: 'post' },
+          user: { url: '/user', method: 'get' }
+        }
+      }
+    },
+    redirect: {
+      login: '/dashboard',
+      logout: '/dashboard',
+      callback: '/dashboard',
+      home: '/dashboard'
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

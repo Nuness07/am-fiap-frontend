@@ -8,6 +8,18 @@
     color: #FFF;
     font-size: 1rem;
   }
+
+  &.ant-btn-secondary{
+    background-color: $secondary-color;
+    border:none;
+    color: #FFF;
+    font-size: 1rem;
+    transition: .3s background-color ease-in-out;
+
+    &:hover{
+      background-color: $primary-color;
+    }
+  }
 }
 .ant-input.primary{
   background: #FFF;
@@ -28,4 +40,8 @@
 }
 .ant-form-item-required::after{
   display: none !important;
+}
+
+.ant-layout-content{
+  background: #E5E5E5 !important;
 }
