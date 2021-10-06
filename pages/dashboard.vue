@@ -51,7 +51,7 @@
             </h3>
             <div class="dashboard-right__item-content">
               <p class="dashboard-right__item-content">
-                Gráfico de meta da equipe
+                <MetaChart :data="equipeMetaData" />
               </p>
             </div>
           </div>
@@ -61,7 +61,7 @@
             </h3>
             <div class="dashboard-right__item-content">
               <p class="dashboard-right__item-content">
-                Gráfico das suas metas
+                <MetaChart :data="pessoalMetaData" />
               </p>
             </div>
           </div>
@@ -73,9 +73,9 @@
               Seu desempenho mensal
             </h3>
             <div class="dashboard-right__item-content">
-              <p class="dashboard-right__item-content">
-                Gráfico de meta mensais
-              </p>
+              <div class="content-grafic">
+                <MetaLineChart height="60" :data="lineMetaData" />
+              </div>
             </div>
           </div>
         </div>
@@ -113,15 +113,76 @@
 </template>
 
 <script>
+import MetaChart from '~/components/MetaChart.vue'
+import MetaLineChart from '~/components/MetaLineChart.vue'
 export default {
+  components: {
+    MetaChart,
+    MetaLineChart
+  },
   layout: 'logged',
-  middleware: 'auth'
+  middleware: 'auth',
+  data () {
+    return {
+      equipeMetaData: {
+        labels: ['Metas não batidas', 'Metas batidas'],
+        datasets: [
+          {
+            backgroundColor: ['#F94A4A', '#4AC7F0'],
+            width: 200,
+            data: [25, 75],
+            borderWidth: 1,
+            weight: 0.5
+          }
+        ],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+
+      },
+
+      pessoalMetaData: {
+        labels: ['Metas não batidas', 'Metas batidas'],
+        datasets: [
+          {
+            backgroundColor: ['#F94A4A', '#4AC7F0'],
+            data: [25, 20]
+          }
+        ]
+      },
+
+      lineMetaData: {
+        labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        datasets: [
+          {
+            label: 'Metas Mensais batidas',
+            data: [10, 5, 12, 20, 22, 10, 12],
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+          }
+        ],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          aspectRatio: 1
+        }
+      }
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .dashboard{
   display: flex;
+  margin-left: 36px;
   &-left{
     min-width: 394px;
     margin-right: 36px;
@@ -248,4 +309,11 @@ export default {
   }
   }
 }
+
+.content-grafic{
+  width: 100%;
+  height: 200px !important;
+  object-fit: cover;
+}
+
 </style>
