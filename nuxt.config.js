@@ -8,7 +8,7 @@ export default {
   head: {
     title: 'am-frontend',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'pt-br'
     },
     meta: [
       { charset: 'utf-8' },
@@ -32,7 +32,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/antd-ui'
+    '@/plugins/antd-ui',
+    { src: '@/plugins/modal.js' }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

@@ -21,7 +21,7 @@
           Nos diga como foi a sua semana
         </h3>
         <div class="dashboard-left__box-content">
-          <a-button type="secondary" class="btn-secondary">
+          <a-button type="secondary" class="btn-secondary" @click="$vm2.open('feedback-semanal')">
             Enviar feedback
           </a-button>
         </div>
@@ -109,6 +109,80 @@
       </div>
       {{ $auth.user }}
     </section>
+
+    <client-only>
+      <!-- INICIO MODAL SPOTIFY -->
+      <vue-modal-2
+        class="modal"
+        name="feedback-semanal"
+        :header-options="{
+          title: 'Enviar Feedback Semanal',
+        }"
+        :no-footer="false"
+        :modal-size="`xl`"
+        @on-close="$vm2.close('feedback-semanal')"
+      >
+        <p class="form-semanal-text">
+          Reflita sobre suas atividades, projetos, interações, dinâmicas e desempenho,
+          e selecione o emoji que mais comunica como você está se sentindo!
+        </p>
+
+        <div class="tipos-feedback">
+          <label
+            v-for="nivel in niveisFeedback"
+            :key="nivel.id"
+            :for="nivel.id"
+            class="c-check"
+          >
+            <input
+              :id="nivel.id"
+              name="tipoImovel"
+              style="pointer-events: none"
+              type="radio"
+            >
+            <span>
+              <div v-if="nivel.nome == 'otimo'">
+                <img src="@/assets/img/icons/icon-happy.svg" alt="feedback bom">
+              </div>
+
+              <div v-if="nivel.nome == 'bom'">
+                <img src="@/assets/img/icons/icon-medium.svg" alt="feedback médio">
+              </div>
+
+              <div v-if="nivel.nome == 'ruim'">
+                <img src="@/assets/img/icons/icon-bad.svg" alt="feedback ruim">
+              </div>
+            </span>
+          </label>
+        </div>
+        <a-form-model
+          ref="formSemanal"
+          :rules="rulesSemanal"
+          :model="formSemanal"
+          class="form-semanal"
+        >
+          <a-form-model-item
+            class="form-item__title"
+            prop="description"
+            label="Diga mais alguma coisa"
+          >
+            <a-textarea :model="formSemanal.description" placeholder="Conte-nos mais como foi sua semana" :rows="4" />
+          </a-form-model-item>
+        </a-form-model>
+
+        <template #footer>
+          <div class="modal-semanal-footer">
+            <p class="modal-semanal-footer-text">
+              Apenas você seu líder e o RH terão visibilidade da sua resposta
+            </p>
+            <a-button type="secondary" class="btn-secondary" @click="check">
+              Enviar feedback
+            </a-button>
+          </div>
+        </template>
+      </vue-modal-2>
+      <!-- FIM MODAL SPOTIFY -->
+    </client-only>
   </div>
 </template>
 
@@ -173,6 +247,25 @@ export default {
           },
           aspectRatio: 1
         }
+      },
+
+      niveisFeedback: [
+        {
+          id: 3,
+          nome: 'ruim'
+        },
+        {
+          id: 2,
+          nome: 'bom'
+        },
+        {
+          id: 1,
+          nome: 'otimo'
+        }
+      ],
+
+      formSemanal: {
+        description: null
       }
     }
   }
@@ -314,6 +407,83 @@ export default {
   width: 100%;
   height: 200px !important;
   object-fit: cover;
+}
+
+.tipos-feedback{
+  display: flex;
+  justify-content: space-around;
+}
+
+.c-check {
+  input {
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    pointer-events: none !important;
+    display: none;
+    position: absolute;
+    top: -1000%;
+
+    &:checked {
+      ~ {
+        span {
+          background: $secondary-color;
+        }
+
+        span .tipoImovel-checked{
+          display: flex;
+        }
+      }
+    }
+  }
+  span {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    transition: background-size 0.2s, background-color 0.2s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+  }
+  .tipoImovel-checked{
+    display: none;
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}
+
+.form-semanal{
+  margin: 20px 36px;
+}
+
+.form-semanal-text{
+  font-weight: 400;
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 0 40px;
+  margin-bottom: 16px;
+}
+
+.modal-semanal-footer{
+  margin-top: -16px;
+  background: #F3F3F3;
+  padding: 30px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &-text{
+    font-size: 0.75rem;
+  }
 }
 
 </style>
