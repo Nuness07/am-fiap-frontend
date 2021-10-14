@@ -84,7 +84,7 @@
       </div>
 
       <!-- INICIO EQUIPES -->
-      <div class="dashboard-right__equipe dashboard-right__section">
+      <div v-if="$auth.user.is_gerente" class="dashboard-right__equipe dashboard-right__section">
         <h3 class="dashboard-right__section--title">
           Sua equipe
         </h3>
