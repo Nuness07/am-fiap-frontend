@@ -599,6 +599,7 @@ export default {
   padding: 5px 15px;
   border-radius: 4px;
   margin-top: 5px;
+  cursor: pointer;
 }
 
 </style>
