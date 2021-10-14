@@ -8,7 +8,7 @@
             {{ $auth.user.nome }} {{ $auth.user.sobrenome }}
           </h2>
           <p class="dashboard-left__user-box-infos--cargo">
-            {{ $auth.user.cargo }}
+            {{ $auth.user.cargo }} <span v-if="$auth.user.is_gerente">- Gerente</span>
           </p>
           <p class="dashboard-left__user-box-infos--filial">
             {{ $auth.user.localidade_filial }}
@@ -21,9 +21,12 @@
           Nos diga como foi a sua semana
         </h3>
         <div class="dashboard-left__box-content">
-          <a-button type="secondary" class="btn-secondary" @click="$vm2.open('feedback-semanal')">
+          <a-button v-if="$auth.user.feedback_semanal == false" type="secondary" class="btn-secondary" @click="$vm2.open('feedback-semanal')">
             Enviar feedback
           </a-button>
+          <p v-else class="feedback-semanal-send">
+            Seu feedback foi enviado
+          </p>
         </div>
       </div>
     </section>
@@ -50,19 +53,15 @@
               Metas batidas da sua equipe
             </h3>
             <div class="dashboard-right__item-content">
-              <p class="dashboard-right__item-content">
-                <MetaChart :data="equipeMetaData" />
-              </p>
+              <MetaChart height="100" :data="equipeMetaData" />
             </div>
           </div>
           <div class="dashboard-right__item">
             <h3 class="dashboard-right__item-title">
-              Suas metas batidas
+              Suas Metas batidas
             </h3>
             <div class="dashboard-right__item-content">
-              <p class="dashboard-right__item-content">
-                <MetaChart :data="pessoalMetaData" />
-              </p>
+              <MetaChart height="100" :data="pessoalMetaData" />
             </div>
           </div>
         </div>
@@ -74,7 +73,7 @@
             </h3>
             <div class="dashboard-right__item-content">
               <div class="content-grafic">
-                <MetaLineChart height="60" :data="lineMetaData" />
+                <MetaLineChart height="100" :data="lineMetaData" />
               </div>
             </div>
           </div>
@@ -101,13 +100,18 @@
           Feedbacks recebidos
         </h3>
 
-        <div class="dashboard-right__item-content">
-          <p class="dashboard-right__item-content">
-            Seus feedbacks
-          </p>
+        <div class="dashboard-right__item-content dashboard-right__item-content--feedbacks">
+          <div v-if="$auth.user.feedbacks.length > 0" class="dashboard-feedback-flex">
+            <div v-for="feedback in $auth.user.feedbacks" :key="feedback.id_feedback">
+              <BoxFeedback :feedback="feedback" />
+            </div>
+          </div>
+          <div v-else>
+            <p>Nenhum Feedback recebido</p>
+          </div>
         </div>
       </div>
-      {{ $auth.user }}
+      <pre>{{ $auth.user }}</pre>
     </section>
 
     <client-only>
@@ -157,7 +161,7 @@
         </div>
         <a-form-model
           ref="formSemanal"
-          :rules="rulesSemanal"
+          :rules="rules"
           :model="formSemanal"
           class="form-semanal"
         >
@@ -166,7 +170,7 @@
             prop="description"
             label="Diga mais alguma coisa"
           >
-            <a-textarea :model="formSemanal.description" placeholder="Conte-nos mais como foi sua semana" :rows="4" />
+            <a-input v-model="formSemanal.description" type="textarea" placeholder="Conte-nos mais como foi sua semana" :rows="4" />
           </a-form-model-item>
         </a-form-model>
 
@@ -187,6 +191,7 @@
 </template>
 
 <script>
+import UserService from '@/service/user/user-service'
 import MetaChart from '~/components/MetaChart.vue'
 import MetaLineChart from '~/components/MetaLineChart.vue'
 export default {
@@ -221,9 +226,16 @@ export default {
         datasets: [
           {
             backgroundColor: ['#F94A4A', '#4AC7F0'],
-            data: [25, 20]
+            width: 200,
+            data: [25, 20],
+            borderWidth: 1,
+            weight: 0.5
           }
-        ]
+        ],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
       },
 
       lineMetaData: {
@@ -266,7 +278,32 @@ export default {
 
       formSemanal: {
         description: null
+      },
+
+      description: null,
+
+      rules: {
+        description: [
+          { required: true, message: 'Digite uma pequena descrição da sua semana' }
+        ]
       }
+    }
+  },
+  methods: {
+    async check () {
+      await this.$refs.formSemanal.validate((valid) => {
+        if (valid) {
+          UserService.editUser(this.$auth.user.id_usuario, { feedback_semanal: true })
+          this.$toast.success('Feedback semanal enviado!', {
+            timeout: 2000
+          })
+          this.$vm2.close('feedback-semanal')
+          this.$router.go()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
@@ -333,6 +370,7 @@ export default {
 
   &-right{
     margin-right: 36px;
+    max-width: 680px;
 
     &__section{
       margin-bottom: 60px;
@@ -473,6 +511,10 @@ export default {
   margin-bottom: 16px;
 }
 
+.modal{
+  z-index: 99999999999;
+}
+
 .modal-semanal-footer{
   margin-top: -16px;
   background: #F3F3F3;
@@ -484,6 +526,29 @@ export default {
   &-text{
     font-size: 0.75rem;
   }
+}
+
+.dashboard-right__item-content--feedbacks{
+  column-gap: 16px;
+  justify-content: flex-start !important;
+  overflow-x: scroll;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  position: relative;
+}
+
+.feedback-semanal-send{
+  background: $primary-color;
+  padding: 5px;
+  color: #FFF;
+  border-radius: 4px;
+}
+
+.dashboard-feedback-flex{
+  display: flex;
+  column-gap: 20px;
+  overflow-x: scroll;
 }
 
 </style>

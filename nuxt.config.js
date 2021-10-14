@@ -33,6 +33,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '@/plugins/antd-ui',
+    '@/plugins/vue-toastification',
     { src: '@/plugins/modal.js' }
   ],
 
@@ -63,7 +64,8 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    'vue-toastification/nuxt'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -91,9 +93,9 @@ export default {
       }
     },
     redirect: {
-      login: '/dashboard',
-      logout: '/dashboard',
-      callback: '/dashboard',
+      login: '/',
+      logout: '/',
+      callback: '/',
       home: '/dashboard'
     }
   },

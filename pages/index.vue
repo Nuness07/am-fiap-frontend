@@ -57,6 +57,10 @@ export default {
       await this.$refs.formLogin.validate((valid) => {
         if (valid) {
           this.login(this.formLogin)
+
+          this.$toast.success('Login realizado!', {
+            timeout: 2000
+          })
         } else {
           console.log('error submit!!')
           return false

@@ -18,7 +18,7 @@
           <OutlineUserGroupIcon />
         </the-sidebar-link>
       </a-menu-item>
-      <a-menu-item key="4" :style="{ padding: '0' }">
+      <a-menu-item v-if="$auth.user.is_gerente" key="4" :style="{ padding: '0' }">
         <the-sidebar-link text="Filtros" slug="/filtros">
           <OutlineAdjustmentsIcon />
         </the-sidebar-link>
