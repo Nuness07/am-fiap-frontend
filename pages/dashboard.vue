@@ -86,7 +86,7 @@
           Sua equipe
         </h3>
 
-        <div class="dashboard-right__item-content">
+        <div class="dashboard-right__item-content content-equipe">
           <div v-for="funcionario in equipe" :key="funcionario.id">
             <BoxFuncionarioEquipe :funcionario="funcionario" />
           </div>
@@ -245,6 +245,13 @@ export default {
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
+          },
+          {
+            label: 'Metas determinadas',
+            data: [10, 8, 10, 20, 24, 11, 10],
+            fill: false,
+            borderColor: '#F94A4A',
+            tension: 0.1
           }
         ],
         options: {
@@ -296,6 +303,11 @@ export default {
           id: 'c3ab00ab-9538-4a35-ac72-b3c4ea26e742',
           nome: 'Bruno Palotta',
           cargo: 'DBA'
+        },
+        {
+          id: 'c3ab00ab-9538-4a35-ac72-b3c4ea26e761',
+          nome: 'Adriana Monteiro',
+          cargo: 'QA'
         }
       ]
     }
@@ -560,6 +572,10 @@ export default {
   display: flex;
   column-gap: 20px;
   overflow-x: scroll;
+}
+
+.content-equipe{
+  column-gap: 20px;
 }
 
 </style>

@@ -1,59 +1,18 @@
 <template>
   <div class="dashboard">
-    <section class="dashboard-left">
-      <div class="dashboard-left__user-box">
-        <img src="@/assets/img/user-icon.png" alt="foto do usuário" class="dashboard-left__user-box--photo">
-        <div class="dashboard-left__user-box-infos">
-          <h2 class="dashboard-left__user-box-infos--name">
-            {{ user.nome }} {{ user.sobrenome }}
-          </h2>
-          <p class="dashboard-left__user-box-infos--cargo">
-            {{ user.cargo }} <span v-if="user.is_gerente">- Gerente</span>
-          </p>
-          <p class="dashboard-left__user-box-infos--filial">
-            {{ user.localidade_filial }}
-          </p>
-        </div>
-      </div>
-
-      <nuxt-link class="btn-sendFeedback" :to="`/dashboard`">
-        <a-button type="primary" class="btn-primary">
-          Voltar para seu perfil
-        </a-button>
-      </nuxt-link>
-    </section>
     <section class="dashboard-right">
       <div class="dashboard-right__metas dashboard-right__section">
         <h3 class="dashboard-right__section--title">
-          Metas Gerais
+          Desempenho Mensal da sua equipe
         </h3>
-
-        <div class="dashboard-right__metas dashboard-right__item">
-          <h3 class="dashboard-right__item-title">
-            Metas de {{ user.nome }}
-          </h3>
-          <div class="dashboard-right__item-content">
-            <p class="dashboard-right__item-content-nometa">
-              {{ user.nome }} ainda não tem nenhuma meta nesse mês
-            </p>
-          </div>
-        </div>
 
         <div class="dashboard-right__metas-graficos">
           <div class="dashboard-right__item">
             <h3 class="dashboard-right__item-title">
-              Metas batidas da equipe de {{ user.nome }}
+              Metas batidas
             </h3>
             <div class="dashboard-right__item-content">
               <MetaChart height="100" :data="equipeMetaData" />
-            </div>
-          </div>
-          <div class="dashboard-right__item">
-            <h3 class="dashboard-right__item-title">
-              Suas Metas batidas
-            </h3>
-            <div class="dashboard-right__item-content">
-              <MetaChart height="100" :data="pessoalMetaData" />
             </div>
           </div>
         </div>
@@ -61,22 +20,36 @@
         <div class="dashboard-right__metas-desempenho">
           <div class="dashboard-right__item">
             <h3 class="dashboard-right__item-title">
-              Desempenho Mensal de {{ user.nome }}
+              Gráfico Anual
             </h3>
-            <div class="dashboard-right__item-content">
+            <div class="dashboard-right__item-content dashboard-item-grafico-anual">
               <div class="content-grafic">
-                <MetaLineChart height="100" :data="lineMetaData" />
+                <MetaLineChart height="80" :data="lineMetaData" />
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- INICIO EQUIPES -->
+      <div class="dashboard-right__equipe dashboard-right__section">
+        <h3 class="dashboard-right__section--title">
+          Feedbacks Semanais da sua equipe
+        </h3>
+
+        <div class="dashboard-right__item-content content-feedback-semanal">
+          <div v-for="funcionario in feedbacksSemanais" :key="funcionario.id">
+            <BoxFeedbackSemanal :funcionario="funcionario" />
+          </div>
+        </div>
+      </div>
+      <!-- FIM EQUIPES -->
     </section>
   </div>
 </template>
 
 <script>
-import UserService from '@/service/user/user-service'
+// import UserService from '@/service/user/user-service'
 import MetaChart from '~/components/MetaChart.vue'
 import MetaLineChart from '~/components/MetaLineChart.vue'
 export default {
@@ -94,7 +67,7 @@ export default {
           {
             backgroundColor: ['#F94A4A', '#4AC7F0'],
             width: 200,
-            data: [2, 30],
+            data: [25, 75],
             borderWidth: 1,
             weight: 0.5
           }
@@ -112,7 +85,7 @@ export default {
           {
             backgroundColor: ['#F94A4A', '#4AC7F0'],
             width: 200,
-            data: [12, 62],
+            data: [25, 20],
             borderWidth: 1,
             weight: 0.5
           }
@@ -128,16 +101,9 @@ export default {
         datasets: [
           {
             label: 'Metas Mensais batidas',
-            data: [2, 8, 18, 12, 10, 10, 12],
+            data: [10, 5, 12, 20, 22, 10, 12],
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
-            tension: 0.1
-          },
-          {
-            label: 'Metas determinadas',
-            data: [10, 8, 16, 14, 13, 11, 7],
-            fill: false,
-            borderColor: '#F94A4A',
             tension: 0.1
           }
         ],
@@ -153,84 +119,45 @@ export default {
         }
       },
 
-      description: null,
-      user: {}
+      feedbacksSemanais: [
+        {
+          id: 'c3ab00ab-9538-4a35-ac72-b3c4ea26e769',
+          nome: 'Gabriel Nunes',
+          cargo: 'Desenvolvedor Front-End',
+          has_feedback: true,
+          nivel_feedback: 'exce',
+          feedback: 'Minha semana foi muito produtiva e eu consegui concluir todas as minhas metas do sprint'
+        },
+        {
+          id: 'c3ab00ab-9538-4a35-ac72-b3c4ea26e742',
+          nome: 'Bruno Palotta',
+          cargo: 'DBA',
+          has_feedback: true,
+          nivel_feedback: 'regu',
+          feedback: 'tive alguns problemas durante a semana que me impediram de concluir todas as metas, mas no geral, até que foi boa'
+        },
+        {
+          id: 'c3ab00ab-9538-4a35-ac72-b3c4ea26e761',
+          nome: 'Adriana Monteiro',
+          cargo: 'Desenvolvedor Front-End',
+          has_feedback: false,
+          nivel_feedback: 'exce',
+          feedback: 'Minha semana foi muito produtiva e eu consegui concluir todas as minhas metas do sprint'
+        }
+      ]
     }
-  },
-  mounted () {
-    this.getUser()
   },
   methods: {
-    async getUser () {
-      const user = await UserService.getUser(this.$route.params.id)
-      this.user = user.data
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .dashboard{
-  display: flex;
   margin-left: 36px;
-  &-left{
-    min-width: 394px;
-    margin-right: 36px;
-    position: sticky;
-    top: 50px;
-    height: 300px;
-    &__user-box{
-      background: #FFF;
-      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-      max-width: 394px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 30px 30px 30px 15px;
-      margin-bottom: 36px;
-
-      &--photo{
-        max-width: 100px;
-        clip-path: circle();
-      }
-
-      &-infos{
-        &--name{
-          font-size: 0.875rem;
-          margin-bottom: 0;
-        }
-        &--cargo{
-          font-size: 0.75rem;
-          margin-bottom: 10px !important;
-        }
-        &--filial{
-          font-size: 0.875rem;
-        }
-      }
-    }
-
-    &__box{
-      &--title{
-        font-size: 1rem;
-        color: $primary-color;
-        text-align: center;
-      }
-    }
-
-    &__feedback-semanal{
-      .dashboard-left__box-content{
-        background: #FFF;
-        padding: 60px 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-  }
-
   &-right{
     margin-right: 36px;
-    max-width: 680px;
+    max-width: 100%;
 
     &__section{
       margin-bottom: 60px;
@@ -261,7 +188,7 @@ export default {
       column-gap: 20px;
 
       .dashboard-right__item{
-        width: 50%;
+        width: 100%;
       }
     }
   }
@@ -411,4 +338,11 @@ export default {
   overflow-x: scroll;
 }
 
+.dashboard-item-grafico-anual{
+  background: transparent;
+}
+
+.content-feedback-semanal{
+  column-gap: 20px;
+}
 </style>

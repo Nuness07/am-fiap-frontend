@@ -6,7 +6,7 @@
 
     <nuxt-link class="btn-sendFeedback" :to="`/funcionario/${funcionario.id}`">
       <a-button type="primary" class="btn-primary">
-        Visualizar Desempenho
+        Visualizar Perfil
       </a-button>
     </nuxt-link>
   </div>
@@ -34,7 +34,7 @@ export default {
   background: #FFF;
   border-radius:4px;
   padding: 10px 20px;
-  min-width: 220px;
+  width: 200px;
   display: flex;
   justify-content: center;
   flex-direction: column;
