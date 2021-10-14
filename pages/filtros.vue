@@ -175,7 +175,7 @@ export default {
           }
         },
         {
-          title: 'Age',
+          title: 'Idade',
           dataIndex: 'age',
           key: 'age',
           scopedSlots: {
@@ -241,7 +241,7 @@ export default {
           }
         },
         {
-          title: 'Data de asmissão',
+          title: 'Data de admissão',
           dataIndex: 'data_admissao',
           key: 'data_admissao',
           scopedSlots: {
