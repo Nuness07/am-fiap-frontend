@@ -55,6 +55,7 @@ export default {
   &__enviar{
     display: flex;
     column-gap: 20px;
+    row-gap: 22px;
     flex-wrap: wrap;
   }
 }

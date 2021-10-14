@@ -5,30 +5,22 @@
         <img src="@/assets/img/user-icon.png" alt="foto do usuário" class="dashboard-left__user-box--photo">
         <div class="dashboard-left__user-box-infos">
           <h2 class="dashboard-left__user-box-infos--name">
-            {{ $auth.user.nome }} {{ $auth.user.sobrenome }}
+            {{ user.nome }} {{ user.sobrenome }}
           </h2>
           <p class="dashboard-left__user-box-infos--cargo">
-            {{ $auth.user.cargo }} <span v-if="$auth.user.is_gerente">- Gerente</span>
+            {{ user.cargo }} <span v-if="user.is_gerente">- Gerente</span>
           </p>
           <p class="dashboard-left__user-box-infos--filial">
-            {{ $auth.user.localidade_filial }}
+            {{ user.localidade_filial }}
           </p>
         </div>
       </div>
 
-      <div class="dashboard-left__feedback-semanal dashboard-left__box">
-        <h3 class="dashboard-left__box--title">
-          Nos diga como foi a sua semana
-        </h3>
-        <div class="dashboard-left__box-content">
-          <a-button v-if="$auth.user.feedback_semanal == false" type="secondary" class="btn-secondary" @click="$vm2.open('feedback-semanal')">
-            Enviar feedback
-          </a-button>
-          <p v-else class="feedback-semanal-send">
-            Seu feedback foi enviado
-          </p>
-        </div>
-      </div>
+      <nuxt-link class="btn-sendFeedback" :to="`/dashboard`">
+        <a-button type="primary" class="btn-primary">
+          Voltar para seu perfil
+        </a-button>
+      </nuxt-link>
     </section>
     <section class="dashboard-right">
       <div class="dashboard-right__metas dashboard-right__section">
@@ -38,11 +30,11 @@
 
         <div class="dashboard-right__metas dashboard-right__item">
           <h3 class="dashboard-right__item-title">
-            Suas metas
+            Metas de {{ user.nome }}
           </h3>
           <div class="dashboard-right__item-content">
             <p class="dashboard-right__item-content-nometa">
-              Você ainda não tem nenhuma meta
+              {{ user.nome }} ainda não tem nenhuma meta nesse mês
             </p>
           </div>
         </div>
@@ -50,7 +42,7 @@
         <div class="dashboard-right__metas-graficos">
           <div class="dashboard-right__item">
             <h3 class="dashboard-right__item-title">
-              Metas batidas da sua equipe
+              Metas batidas da equipe de {{ user.nome }}
             </h3>
             <div class="dashboard-right__item-content">
               <MetaChart height="100" :data="equipeMetaData" />
@@ -69,7 +61,7 @@
         <div class="dashboard-right__metas-desempenho">
           <div class="dashboard-right__item">
             <h3 class="dashboard-right__item-title">
-              Seu desempenho mensal
+              Desempenho Mensal de {{ user.nome }}
             </h3>
             <div class="dashboard-right__item-content">
               <div class="content-grafic">
@@ -79,112 +71,7 @@
           </div>
         </div>
       </div>
-
-      <!-- INICIO EQUIPES -->
-      <div class="dashboard-right__equipe dashboard-right__section">
-        <h3 class="dashboard-right__section--title">
-          Sua equipe
-        </h3>
-
-        <div class="dashboard-right__item-content">
-          <div v-for="funcionario in equipe" :key="funcionario.id">
-            <BoxFuncionarioEquipe :funcionario="funcionario" />
-          </div>
-        </div>
-      </div>
-      <!-- FIM EQUIPES -->
-
-      <!-- INICIO FEEDBACKS -->
-      <div class="dashboard-right__feedbacks dashboard-right__section">
-        <h3 class="dashboard-right__section--title">
-          Feedbacks recebidos
-        </h3>
-
-        <div class="dashboard-right__item-content dashboard-right__item-content--feedbacks">
-          <div v-if="$auth.user.feedbacks.length > 0" class="dashboard-feedback-flex">
-            <div v-for="feedback in $auth.user.feedbacks" :key="feedback.id_feedback">
-              <BoxFeedback :feedback="feedback" />
-            </div>
-          </div>
-          <div v-else>
-            <p>Nenhum Feedback recebido</p>
-          </div>
-        </div>
-      </div>
     </section>
-
-    <client-only>
-      <vue-modal-2
-        class="modal"
-        name="feedback-semanal"
-        :header-options="{
-          title: 'Enviar Feedback Semanal',
-        }"
-        :no-footer="false"
-        :modal-size="`xl`"
-        @on-close="$vm2.close('feedback-semanal')"
-      >
-        <p class="form-semanal-text">
-          Reflita sobre suas atividades, projetos, interações, dinâmicas e desempenho,
-          e selecione o emoji que mais comunica como você está se sentindo!
-        </p>
-
-        <div class="tipos-feedback">
-          <label
-            v-for="nivel in niveisFeedback"
-            :key="nivel.id"
-            :for="nivel.id"
-            class="c-check"
-          >
-            <input
-              :id="nivel.id"
-              name="tipoImovel"
-              style="pointer-events: none"
-              type="radio"
-            >
-            <span>
-              <div v-if="nivel.nome == 'otimo'">
-                <img src="@/assets/img/icons/icon-happy.svg" alt="feedback bom">
-              </div>
-
-              <div v-if="nivel.nome == 'bom'">
-                <img src="@/assets/img/icons/icon-medium.svg" alt="feedback médio">
-              </div>
-
-              <div v-if="nivel.nome == 'ruim'">
-                <img src="@/assets/img/icons/icon-bad.svg" alt="feedback ruim">
-              </div>
-            </span>
-          </label>
-        </div>
-        <a-form-model
-          ref="formSemanal"
-          :rules="rules"
-          :model="formSemanal"
-          class="form-semanal"
-        >
-          <a-form-model-item
-            class="form-item__title"
-            prop="description"
-            label="Diga mais alguma coisa"
-          >
-            <a-input v-model="formSemanal.description" type="textarea" placeholder="Conte-nos mais como foi sua semana" :rows="4" />
-          </a-form-model-item>
-        </a-form-model>
-
-        <template #footer>
-          <div class="modal-semanal-footer">
-            <p class="modal-semanal-footer-text">
-              Apenas você seu líder e o RH terão visibilidade da sua resposta
-            </p>
-            <a-button type="secondary" class="btn-secondary" @click="check">
-              Enviar feedback
-            </a-button>
-          </div>
-        </template>
-      </vue-modal-2>
-      <!-- FIM MODAL SPOTIFY -->
-    </client-only>
   </div>
 </template>
 
@@ -207,7 +94,7 @@ export default {
           {
             backgroundColor: ['#F94A4A', '#4AC7F0'],
             width: 200,
-            data: [25, 75],
+            data: [2, 30],
             borderWidth: 1,
             weight: 0.5
           }
@@ -225,7 +112,7 @@ export default {
           {
             backgroundColor: ['#F94A4A', '#4AC7F0'],
             width: 200,
-            data: [25, 20],
+            data: [12, 62],
             borderWidth: 1,
             weight: 0.5
           }
@@ -241,7 +128,7 @@ export default {
         datasets: [
           {
             label: 'Metas Mensais batidas',
-            data: [10, 5, 12, 20, 22, 10, 12],
+            data: [2, 8, 18, 12, 10, 10, 12],
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1
@@ -259,62 +146,17 @@ export default {
         }
       },
 
-      niveisFeedback: [
-        {
-          id: 3,
-          nome: 'ruim'
-        },
-        {
-          id: 2,
-          nome: 'bom'
-        },
-        {
-          id: 1,
-          nome: 'otimo'
-        }
-      ],
-
-      formSemanal: {
-        description: null
-      },
-
       description: null,
-
-      rules: {
-        description: [
-          { required: true, message: 'Digite uma pequena descrição da sua semana' }
-        ]
-      },
-
-      equipe: [
-        {
-          id: 'c3ab00ab-9538-4a35-ac72-b3c4ea26e769',
-          nome: 'Gabriel Nunes',
-          cargo: 'Desenvolvedor Front-end'
-        },
-        {
-          id: 'c3ab00ab-9538-4a35-ac72-b3c4ea26e742',
-          nome: 'Bruno Palotta',
-          cargo: 'DBA'
-        }
-      ]
+      user: {}
     }
   },
+  mounted () {
+    this.getUser()
+  },
   methods: {
-    async check () {
-      await this.$refs.formSemanal.validate((valid) => {
-        if (valid) {
-          UserService.editUser(this.$auth.user.id_usuario, { feedback_semanal: true })
-          this.$toast.success('Feedback semanal enviado!', {
-            timeout: 2000
-          })
-          this.$vm2.close('feedback-semanal')
-          this.$router.go()
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+    async getUser () {
+      const user = await UserService.getUser(this.$route.params.id)
+      this.user = user.data
     }
   }
 }
