@@ -53,7 +53,7 @@
         <div class="dashboard-right__metas-graficos">
           <div class="dashboard-right__item">
             <h3 class="dashboard-right__item-title">
-              Metas batidas da sua equipe
+              Metas da sua equipe
             </h3>
             <div class="dashboard-right__item-content">
               <MetaChart height="100" :data="equipeMetaData" />
@@ -61,7 +61,7 @@
           </div>
           <div class="dashboard-right__item">
             <h3 class="dashboard-right__item-title">
-              Suas Metas batidas
+              Suas Metas
             </h3>
             <div class="dashboard-right__item-content">
               <MetaChart height="100" :data="pessoalMetaData" />
