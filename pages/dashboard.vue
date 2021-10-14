@@ -13,6 +13,9 @@
           <p class="dashboard-left__user-box-infos--filial">
             {{ $auth.user.localidade_filial }}
           </p>
+          <button class="logout" @click="logout">
+            Sair
+          </button>
         </div>
       </div>
 
@@ -327,6 +330,17 @@ export default {
           return false
         }
       })
+    },
+    async logout () {
+      try {
+        await this.$auth.logout()
+        this.$toast.success('Você deslogou com sucesso!', {
+          timeout: 2000
+        })
+        this.$router.push('/')
+      } catch (err) {
+        console.log(err)
+      }
     }
   }
 }
@@ -576,6 +590,15 @@ export default {
 
 .content-equipe{
   column-gap: 20px;
+}
+
+.logout{
+  border: none;
+  background:crimson;
+  color: #FFF;
+  padding: 5px 15px;
+  border-radius: 4px;
+  margin-top: 5px;
 }
 
 </style>
